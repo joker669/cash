@@ -7,6 +7,7 @@ LENGTH=480
 
 img = cv2.imread('src\\cash\\scripts\\cy.jpg')
 img = cv2.resize(img, (WIDTH, LENGTH), interpolation=cv2.INTER_CUBIC)
+cv2.circle(img, (int(WIDTH/2), int(LENGTH/2)), 10, (0, 0, 255), 0)
 
 def img_pub():
     pub = rospy.Publisher('target_co', target, queue_size=10)
