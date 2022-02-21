@@ -2,14 +2,14 @@ import rospy
 import cv2
 import time
 import numpy as np  
-from cash.msg import target
-from cash.msg import control
+from cash.msg import *
 from cash.srv import *
+
 width = 0
 length = 0
 target_co = [0, 0, 0, 0]
 
-def callback(data):
+def face_callback(data):
     global width
     global length
     global target_co
@@ -38,11 +38,8 @@ def pcm():
     global width
     global length
     global target_co
-    # In ROS, nodes are uniquely named. If two nodes with the same
-    # name are launched, the previous one is kicked off. The
-    # anonymous=True flag means that rospy will choose a unique
-    # run simultaneously.
-    rospy.init_node('pcm', anonymous=True)#启动节点并同时为节点命名 
+
+    rospy.init_node('pcm_node', anonymous=True)#启动节点并同时为节点命名 
     rospy.Subscriber('target_co', target, callback)#启动订阅，订阅主题‘target_co’，及标准字符串格式，同时调用回调函数，当有数据时调用函数，取出数据
     
     old_width = 0

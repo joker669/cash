@@ -1,0 +1,42 @@
+<launch>
+
+	<node
+		pkg="cash"
+		type="camera_pub.py"
+		name="camera_pub"
+		required = "true"
+		output = "screen"
+	/>
+
+	<node
+		pkg="cash"
+		type="face_detection.py"
+		name="face_detection"
+		output = "screen"
+	/>
+
+	<node
+		pkg="cash"
+		type="gesture_detection.py"
+		name="gesture_detection"
+		output = "screen"
+	/>
+
+	<node
+		pkg="cash"
+		type="pcm_new.py"
+		name="pcm_new"
+		respawn="false"
+		output = "screen"
+	/>
+
+	<node
+		pkg="cash"
+		type="acm.py"
+		name="acm"
+		respawn="false"
+		output = "screen"
+	/>
+
+
+</launch>

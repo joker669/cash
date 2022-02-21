@@ -12,6 +12,9 @@ find_package(catkin REQUIRED COMPONENTS
   std_msgs
   message_generation
   message_runtime
+  OpenCV
+  cv_bridge
+  sensor_msgs
 )
 
 ## System dependencies are found with CMake's conventions
@@ -52,6 +55,8 @@ add_message_files(
   FILES
   target.msg
   control.msg
+  face_info.msg
+  gesture_info.msg
 )
 
 ## Generate services in the 'srv' folder
