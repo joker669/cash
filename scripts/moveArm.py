@@ -26,7 +26,14 @@ enum DIRECTION
 class arm:
     def __init__(self, serial_port = 'COM5'):
         self.port = serial.Serial(serial_port, 9600, timeout=1)
+        ###the defination of parts, the key words of different joints of the arm from down to up
         self.part = {'BASE' : '0', 'SHOULDER':'1', 'ELBOW':'2', 'WRISTROTATION':'3', 'WRIST':'4'}
+        ###the defination of direction, the key words of direction of joints
+        ###BASE --> Left & Right
+        ###SHOULDER --> Forward & Backward
+        ###ELBOW --> Up & Down
+        ###WRISTROTATION --> Wrist UP & Wrist down
+        ###WRIST --> Vertical & horizontal
         self.direction = {'L':'1', 'R':'2', 'F':'3','B':'4', 'U':'5','D':'6','WU':'7','WD':'8', 'H':'9', 'V':'0'}
         time.sleep(3)
     def sent2arm(self, cmd):
