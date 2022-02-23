@@ -12,7 +12,6 @@ find_package(catkin REQUIRED COMPONENTS
   std_msgs
   message_generation
   message_runtime
-  OpenCV
   cv_bridge
   sensor_msgs
 )
