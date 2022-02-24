@@ -19,8 +19,8 @@ cmd:
 catkin_make
 . ~/$your_work_space/devel/setup.bash
 ```
-to check if successful or not:
-rospack depends1 cash (as long as it outputs some packages then it's fine) 
+to check if successful or not: (may need to run rosdep update first)
+rospack depends1 cash (as long as it outputs some packages then it's fine)
 
 **4. If find that unable to use cv_bridge with ROS Kinetic and Python3, plz refer to this link:https://stackoverflow.com/questions/49221565/unable-to-use-cv-bridge-with-ros-kinetic-and-python3?rq=1 (Kindly remember to modify those ros version or python version.)**
 
