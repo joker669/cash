@@ -11,7 +11,7 @@ char buffer[INPUT_BUFFER_SIZE];
 void setup() {
   // put your setup code here, to run once:
   braccino.init();
-  Serial.begin(9600);
+  Serial.begin(115200);
   delay(1000);
   for(int i=0; i < 5; i++){
     braccino.parts_direction[i] = 0;
@@ -75,6 +75,7 @@ void loop() {
 }
 
 void serialEvent() {
+  //Serial.print(Serial.available());
   if (Serial.available() == 7) {
     int numdata = 0;
     int part = 0;

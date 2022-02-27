@@ -41,7 +41,7 @@ void _braccino_arm::init(bool doSoftStart) {
   base.write(90);
   shoulder.write(90);
   elbow.write(90);
-  wrist.write(90);
+  wrist.write(0);
   wristRotation.write(90);
   gripper.write(73);
   if (doSoftStart) {

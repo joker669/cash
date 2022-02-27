@@ -25,7 +25,7 @@ enum DIRECTION
 '''
 class arm:
     def __init__(self, serial_port = 'COM5'):
-        self.port = serial.Serial(serial_port, 9600, timeout=1)
+        self.port = serial.Serial(serial_port, 115200,timeout=1)
         ###the defination of parts, the key words of different joints of the arm from down to up
         self.part = {'BASE' : '0', 'SHOULDER':'1', 'ELBOW':'2', 'WRISTROTATION':'3', 'WRIST':'4'}
         ###the defination of direction, the key words of direction of joints
@@ -38,15 +38,17 @@ class arm:
         time.sleep(3)
     def sent2arm(self, cmd):
         for i in range(4):
+            self.port.flushInput()
             self.port.write(cmd.encode())
             time.sleep(0.05)
-            if(self.port.read_all().decode() == 'T'):
+            OK = self.port.read(1).decode()
+            if(OK == 'T'):
                 break;
-            print("retry")
+            print(OK+'retry')
            
     def set_joint(self, joint, direction, speed = 0):
         cmd = 'S'+ self.part[joint]+self.direction[direction]+str(speed).zfill(3)+'\n'
-        print(cmd)
+        #print(cmd)
         self.sent2arm(cmd);
         
     def close(self):
@@ -55,13 +57,13 @@ class arm:
         
 if __name__ == '__main__':
     a=arm()
-    time.sleep(1)
-    a.set_joint('BASE', 'L', 10)
-    a.set_joint('SHOULDER', 'F', 10)
-    time.sleep(1)
-    a.set_joint('BASE', 'R', 10)
-    a.set_joint('SHOULDER', 'B', 10)
-    time.sleep(1)
-    a.set_joint('BASE', 'L', 10)
-    time.sleep(1)
-    a.set_joint('BASE', 'R', 10)
+    time.sleep(3)
+    a.set_joint('ELBOW', 'U', 5)
+    a.set_joint('SHOULDER', 'F', 5)
+    time.sleep(3)
+    a.set_joint('ELBOW', 'D', 5)
+    a.set_joint('SHOULDER', 'B',5)
+    ##time.sleep(1)
+    #a.set_joint('BASE', 'L', 10)
+    #time.sleep(1)
+    #a.set_joint('BASE', 'R', 10)

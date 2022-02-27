@@ -9,7 +9,7 @@ width = 0
 length = 0
 target_co = [0, 0, 0, 0]
 
-def face_callback(data):
+def callback(data):
     global width
     global length
     global target_co
@@ -65,10 +65,10 @@ def pcm():
         #########################计算距离，距离过大开始跟踪
         distance = abs(target_co[0]+(target_co[2]/2) - (width/2)) + abs(target_co[2]+(target_co[3]/2)-(length/2))
         if(distance > 200 and s_tracking == False):
-            tracking_client(1)
+            #tracking_client(1)
             s_tracking = True
         elif(distance < 150 and s_tracking == True):
-            tracking_client(2)
+            #tracking_client(2)
             s_tracking = False
         if(rc == True):
             cv2.imshow("img",img)
