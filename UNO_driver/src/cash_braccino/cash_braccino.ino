@@ -21,6 +21,7 @@ void setup() {
   braccino.parts_state[BASE] = braccino.base.readMicroseconds();
   braccino.parts_state[SHOULDER] = braccino.shoulder.readMicroseconds();
   braccino.parts_state[ELBOW] = braccino.elbow.readMicroseconds();
+  braccino.parts_state[WRIST] = braccino.wrist.readMicroseconds();
   braccino.parts_state[WRISTROTATION] = braccino.wristRotation.readMicroseconds();
   
 //TEST
