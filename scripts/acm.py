@@ -5,12 +5,24 @@ import rospy
 from cash.srv import *
 from cash.msg import *
 from moveArm import arm
+from time import sleep
 
 Is_tracking = True
 width = 0
 length = 0
 target_co = [0, 0, 0, 0]
 center = [0,0]
+
+# PID controller gain variables
+SAMPLETIME=0.5
+KP=0.02  #proportiaonal
+KD=0.01  #derivative
+KI=0.005 #integral
+
+# for vertical movement
+prev_error_y = 0
+sum_error_y = 0
+
 
 def callback(data):
     global width
@@ -45,11 +57,27 @@ def tracking_thread():
             speed_x = 0
             
         if(center_t[1] - center[1] > 50):#############pid for up & down
+            error_y = abs(center[1] - center_t[1])
+            speed_y +=(error_y*KP) +(prev_error_y*KD) +(sum_error_y*KI)
+            speed_y = 10 - speed_y # take the inverse to increase speed as error become less
+            speed_y = max(min(10, speed_y), 1)  # make sure speed don't go past max=10 or below min=1
             di_y = 'D'
-            speed_y = 2
+            #speed_y = 2
+            sleep(SAMPLETIME)
+            prev_error_y = error_y
+            sum_error_y += error_y
+           
         elif(center_t[1] - center[1] < -50):
-            di_y = 'U'
-            speed_y = 2
+            error_y = abs(center[1] - center_t[1])
+            speed_y +=(error_y*KP) +(prev_error_y*KD) +(sum_error_y*KI)
+            speed_y = 10 - speed_y # take the inverse to increase speed as error become less
+            speed_y = max(min(10, speed_y), 1)  # make sure speed don't go past max=10 or below min=1
+            di_y = 'D'
+            #speed_y = 2
+            sleep(SAMPLETIME)
+            prev_error_y = error_y
+            sum_error_y += error_y
+ 
         else:
             di_y = 'D'
             speed_y = 0
