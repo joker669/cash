@@ -1,4 +1,4 @@
-int32 height
-int32 width
+int32 depth
 int32 gesture
-int32[] co
+int32 target_x
+int32 target_y
