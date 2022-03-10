@@ -7,6 +7,7 @@ from cash.msg import face_info
 from sensor_msgs.msg import Image
 from cv_bridge import CvBridge, CvBridgeError
 import cv2
+from message_filters import TimeSynchronizer, Subscriber,ApproximateTimeSynchronizer
 
 def get_coordinates(cv_img):
     '''
@@ -21,15 +22,15 @@ def get_coordinates(cv_img):
     return [x_upleft, y_upleft, rectangle_height, rectangle_width]
 
 
-def callback(data):
+def callback(color_frame, depth_frame):
     global bridge, count,face_pub
     
     # get the frame info
-    cv_img = bridge.imgmsg_to_cv2(data, "bgr8")
+    cv_img = bridge.imgmsg_to_cv2(color_frame,"bgr8")
     count += 1
-    print('receieved: frame',count )
-    #cv2.imshow("frame", cv_img)
-    #cv2.waitKey(1)
+    print('receieved: frame',count,cv_img.shape )
+    # cv2.imshow("frame", cv_img)
+    # cv2.waitKey(1)
     
     #Below are just some mock codes. Plz modify the code. 
     width = 640  #the image width ( corresponding to the coordinates)
@@ -49,7 +50,10 @@ def callback(data):
 
 def  subscriber():
     rospy.init_node('face_detection_node', anonymous=True)
-    rospy.Subscriber('/image_view/image_raw', Image, callback)
+    # rospy.Subscriber('/image_view/image_raw', Image, callback)
+    tss = ApproximateTimeSynchronizer([Subscriber("/image_view/image_raw", Image),
+                Subscriber("/image_view/depth_image_raw", Image)],queue_size=5, slop=0.1)
+    tss.registerCallback(callback)
     rospy.spin()
     
     
