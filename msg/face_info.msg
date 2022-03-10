@@ -1,4 +1,5 @@
-int32 height
-int32 width
-int32 angle
-int32[] co
+int32 target_x
+int32 target_y
+int32 depth
+int32 angle_yaw
+int32 angle_pitch
