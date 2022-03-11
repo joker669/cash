@@ -21,7 +21,7 @@ def get_coordinates(cv_img):
     :return: a four-elements integer list which represents the coordinates of the target (face) in the frame
     '''
     
-    image, face, point_2d, point_3d, nose_2d, nose_3d = detector.findFaceMesh(cv_img)
+    image, face, keypoint_2d, keypoint_3d, nose_2d, nose_3d = detector.findFaceMesh(cv_img)
     
     if len(face) != 0:
     	nose_bridge_location = face[6]
@@ -30,7 +30,7 @@ def get_coordinates(cv_img):
     	
     	x = nose_bridge_location[0]
     	y = nose_bridge_location[1]
-    	pitch, yaw = headPose.headPoseEstimation(image, point_2d, point_3d, nose_2d, nose_3d)
+    	pitch, yaw = headPose.headPoseEstimation(image, keypoint_2d, keypoint_3d, nose_2d, nose_3d)
 
     cv2.imshow('MediaPipe Face Mesh', image)
     cv2.waitKey(1)
@@ -55,8 +55,6 @@ def callback(color_frame):
     x, y, pitch, yaw = get_coordinates(cv_img)
     
     fi = face_info()
-    # fi.width = width
-    # fi.height = height
     fi.target_x = x
     fi.target_y = y
     # fi.depth = depth_frame[x,y]
