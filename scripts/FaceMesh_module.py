@@ -75,3 +75,4 @@ class FaceMeshDetector:
                     keypoint_3d.append([x, y, landmark.z * 1.8])
 
         return image, face, keypoint_2d, keypoint_3d, nose_2d, nose_3d
+    
