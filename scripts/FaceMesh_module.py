@@ -28,7 +28,7 @@ class FaceMeshDetector:
             multi_facelandmark_6z.append(face_landmarks.landmark[6].z)
             # nose bridge landmark [6]
             # 生成一个列表：在一张图片中的多个脸的6z值,
-            # the smaller the z value the closer the landmark is to the camera.
+            # the smaller the z value, the closer the landmark is to the camera.
 
         min6z = min(multi_facelandmark_6z)
         index = multi_facelandmark_6z.index(min6z)
@@ -36,15 +36,15 @@ class FaceMeshDetector:
 
         return face_landmarks
 
-    def findFaceMesh(self, image, draw = False):
+    def findFaceMesh(self, image, draw=True):
 
         image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
         self.results = self.face_mesh.process(image)
 
         image = cv2.cvtColor(image, cv2.COLOR_RGB2BGR)
         face = []
-        point_2d = []
-        point_3d = []
+        keypoint_2d = []
+        keypoint_3d = []
         nose_2d = []
         nose_3d = []
         if self.results.multi_face_landmarks:
@@ -65,12 +65,13 @@ class FaceMeshDetector:
                 # cv2.putText(image, str(idx), (x, y), cv2.FONT_HERSHEY_PLAIN,
                 #             1, (0, 0, 255), 1)
                 face.append([x, y])
-                if idx == 33 or idx == 263 or idx == 1 or idx == 61 or idx == 291 or idx == 199:
-                    # Right Eye[263], Left Eye[33], Nose[1], left mouth Corner[63],right mouth corner[291], Chin[199]
-                    if idx == 1:
+                if idx == 130 or idx == 359 or idx == 4 or idx == 61 or idx == 291 or idx == 152:
+                    # Right Eye[359], Left Eye[130], Nose[4], left mouth Corner[61],right mouth corner[291], Chin[152]
+                    cv2.circle(image, face[idx], 3, (0, 255, 255), -1)
+                    if idx == 4:
                         nose_2d = (x, landmark.y * ih)
-                        nose_3d = (landmark.x * iw, landmark.y * ih, landmark.z * 5000)
-                    point_2d.append([x, y])
-                    point_3d.append([x, y, landmark.z])
+                        nose_3d = (landmark.x * iw, landmark.y * ih, landmark.z * 3000)
+                    keypoint_2d.append([x, y])
+                    keypoint_3d.append([x, y, landmark.z * 1.8])
 
-        return image, face, point_2d, point_3d, nose_2d, nose_3d
+        return image, face, keypoint_2d, keypoint_3d, nose_2d, nose_3d
