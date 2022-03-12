@@ -12,10 +12,17 @@ acm_mode = 'start' # ['start','stop']
 system_mode = 'face' # ['face','gesture','frozen']
 
 def boundary_checking(data):
-    width = data.width
-    length = data.height
-    target_co = data.co
-    return False
+    bbox_x1,bbox_x2 = 160,480
+    bbox_y1,bbox_y2 = 120,360
+    bbox_z1,bbox_z2 = 10,1000
+    target_x = data.target_x
+    target_y = data.target_y
+    depth = data.depth
+
+    if target_x<=bbox_x1 or target_x>=bbox_x2 or target_y<=bbox_y1 or target_y>=bbox_y2 or depth<=bbox_z1 or depth>=bbox_z2:
+        return False
+    else:
+        return True
 
 
 def face_callback(data):
@@ -27,12 +34,12 @@ def face_callback(data):
         
         if not inside and acm_mode == 'stop':
         
-            tracking_client(1)
+            # tracking_client(1)
             rospy.loginfo("call  acm")
             
         elif inside and acm_mode == 'start':
         
-            tracking_client(2)
+            # tracking_client(2)
             rospy.loginfo("stop  acm")
             
     rospy.loginfo("current acm_mode: {},  current system_mode: {}".format(acm_mode, system_mode))
@@ -41,27 +48,28 @@ def face_callback(data):
 def gesture_callback(data):
     global system_mode, acm_mode
     rospy.loginfo(data)
-    if system_mode == 'gesture':
     
-        inside = boundary_checking(data)
-        
-        if not inside and acm_mode == 'stop':
-        
-            tracking_client(1)
-            rospy.loginfo("call  acm")
-            
-        elif inside and acm_mode == 'start':
-        
-            tracking_client(2)
-            rospy.loginfo("stop  acm")
-            
     if data.gesture == 1:        
         system_mode = 'face'
     elif data.gesture == 2:        
         system_mode = 'gesture'
     elif data.gesture == 3:        
         system_mode = 'frozen'
+    
+    if system_mode == 'gesture':
+    
+        inside = boundary_checking(data)
         
+        if not inside and acm_mode == 'stop':
+        
+            # tracking_client(1)
+            rospy.loginfo("call  acm")
+            
+        elif inside and acm_mode == 'start':
+        
+            # tracking_client(2)
+            rospy.loginfo("stop  acm")
+                    
     rospy.loginfo("current acm_mode: {},  current system_mode: {}".format(acm_mode, system_mode))
 
 

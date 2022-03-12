@@ -16,7 +16,7 @@ detector = HandDetector(detectionCon=0.8, maxHands=1)
 def get_gesture_class(finger_status):
     # determined by the number of fingers are up
     class_no = 0
-
+    print(finger_status)
     for finger in finger_status:
         if finger == 1:
             class_no += 1
@@ -62,13 +62,13 @@ def callback(color_frame, depth_frame):
     # cv2.waitKey(1)
 
     #height, width, _ = frame.shape
-    bbox, gesture = process_hand(cv_img)
-
+    center, gesture = process_hand(cv_img)
+    rospy.loginfo(center)
     fi = gesture_info()    
-    if bbox:
-        fi.target_x = center[0]
-        fi.target_y = center[1]
-        fi.depth = cv_img_depth[fi.target_x][fi.target_y]
+    if center:
+        fi.target_x = min(center[0],639)
+        fi.target_y = min(center[1],479)
+        fi.depth = cv_img_depth[fi.target_y][fi.target_x]
         fi.gesture = gesture
         
     else:
