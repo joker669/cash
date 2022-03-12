@@ -8,6 +8,7 @@ from cash.msg import gesture_info
 from sensor_msgs.msg import Image
 from cv_bridge import CvBridge, CvBridgeError
 from cvzone.HandTrackingModule import HandDetector
+from message_filters import TimeSynchronizer, Subscriber,ApproximateTimeSynchronizer
 
 detector = HandDetector(detectionCon=0.8, maxHands=1)
 
@@ -33,7 +34,7 @@ def process_hand(cv_img):
         return bbox, gesture_class  # return None, None
 
     for hand in hands:
-        if hand1["type"] != 'Right':  # control only with right hand
+        if hand["type"] != 'Right':  # control only with right hand
             continue
 
         # get bbox
@@ -53,21 +54,31 @@ def callback(color_frame, depth_frame):
 
     # get the frame info
     cv_img = bridge.imgmsg_to_cv2(color_frame, "bgr8")
+    cv_img_depth = bridge.imgmsg_to_cv2(depth_frame, "mono16")
+    print(cv_img_depth.shape)
     count += 1
     print('received: frame ', count)
     # cv2.imshow("frame", cv_img)
     # cv2.waitKey(1)
 
-    height, width, _ = frame.shape
+    #height, width, _ = frame.shape
     bbox, gesture = process_hand(cv_img)
 
-    fi = gesture_info()
-    fi.depth = 0
-    fi.gesture = gesture
-    fi.target_x = bbox[0]
-    fi.target_y = bbox[1]
+    fi = gesture_info()    
+    if bbox:
+        fi.target_x = bbox[0]
+        fi.target_y = bbox[1]
+        fi.depth = cv_img_depth[fi.target_x][fi.target_y]
+        fi.gesture = gesture
+        
+    else:
+        fi.depth = -1
+        fi.gesture = -1
+        fi.target_x = -1
+        fi.target_y = -1
 
     rospy.loginfo(fi)
+    print(fi)
     face_pub.publish(fi)
 
 
