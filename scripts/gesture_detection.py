@@ -43,7 +43,7 @@ def process_hand(cv_img):
         finger_status = detector.fingersUp(hand)
         gesture_class = get_gesture_class(finger_status)
 
-    if not bbox:
+    if not center:
         print('WARNING: please use right hand for controlling!')  # return None, None
 
     return center, gesture_class
