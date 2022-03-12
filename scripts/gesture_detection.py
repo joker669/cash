@@ -25,20 +25,20 @@ def get_gesture_class(finger_status):
 
 
 def process_hand(cv_img):
-    bbox = None
+    center = None
     gesture_class = None
     hands = detector.findHands(cv_img, draw=False)
 
     if not hands:
         print('WARNING: no hand detected!')
-        return bbox, gesture_class  # return None, None
+        return center, gesture_class  # return None, None
 
     for hand in hands:
         if hand["type"] != 'Right':  # control only with right hand
             continue
 
-        # get bbox
-        bbox = list(hand["bbox"])
+        # get center of hand
+        center = list(hand["center"])
         # get gesture class
         finger_status = detector.fingersUp(hand)
         gesture_class = get_gesture_class(finger_status)
@@ -46,7 +46,7 @@ def process_hand(cv_img):
     if not bbox:
         print('WARNING: please use right hand for controlling!')  # return None, None
 
-    return bbox, gesture_class
+    return center, gesture_class
 
 
 def callback(color_frame, depth_frame):
@@ -66,16 +66,16 @@ def callback(color_frame, depth_frame):
 
     fi = gesture_info()    
     if bbox:
-        fi.target_x = bbox[0]
-        fi.target_y = bbox[1]
+        fi.target_x = center[0]
+        fi.target_y = center[1]
         fi.depth = cv_img_depth[fi.target_x][fi.target_y]
         fi.gesture = gesture
         
     else:
-        fi.depth = -1
-        fi.gesture = -1
         fi.target_x = -1
         fi.target_y = -1
+        fi.depth = -1
+        fi.gesture = -1
 
     rospy.loginfo(fi)
     print(fi)
