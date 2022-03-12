@@ -62,10 +62,10 @@ def callback(color_frame, depth_frame):
     bbox, gesture = process_hand(cv_img)
 
     fi = gesture_info()
-    fi.height = height
-    fi.width = width
-    fi.co = bbox
+    fi.depth = 0
     fi.gesture = gesture
+    fi.target_x = bbox[0]
+    fi.target_y = bbox[1]
 
     rospy.loginfo(fi)
     face_pub.publish(fi)
