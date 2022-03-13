@@ -36,7 +36,7 @@ class FaceMeshDetector:
 
         return face_landmarks
 
-    def findFaceMesh(self, image, draw=True):
+    def findFaceMesh(self, image, draw=False):
 
         image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
         self.results = self.face_mesh.process(image)

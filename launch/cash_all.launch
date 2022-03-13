@@ -9,7 +9,7 @@
 
 	<node
 		pkg="cash"
-		type="face_detection.py"
+		type="face_detection_Gu.py"
 		name="face_detection"
 	/>
 
@@ -24,6 +24,7 @@
 		type="pcm_new.py"
 		name="pcm_new"
 		respawn="false"
+		output = "screen"
 	/>
 
 	<node
@@ -31,7 +32,6 @@
 		type="acm.py"
 		name="acm"
 		respawn="false"
-		output = "screen"
 	/>
 
 

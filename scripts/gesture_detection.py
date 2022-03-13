@@ -55,11 +55,13 @@ def callback(color_frame, depth_frame):
     # get the frame info
     cv_img = bridge.imgmsg_to_cv2(color_frame, "bgr8")
     cv_img_depth = bridge.imgmsg_to_cv2(depth_frame, "mono16")
+
     print(cv_img_depth.shape)
     count += 1
+    bbox_x1,bbox_x2 = int(640/3), int(640/3*2)
+    bbox_y1,bbox_y2 = int(480/3),int(480/3*2)
     print('received: frame ', count)
-    # cv2.imshow("frame", cv_img)
-    # cv2.waitKey(1)
+
 
     #height, width, _ = frame.shape
     center, gesture = process_hand(cv_img)
@@ -76,6 +78,12 @@ def callback(color_frame, depth_frame):
         fi.target_y = -1
         fi.depth = -1
         fi.gesture = -1
+    
+    cv_img_cp = cv_img
+    cv2.circle(cv_img_cp,(max(fi.target_x,0),max(fi.target_y,0)),2,(0,0,255),-1)
+    cv2.rectangle(cv_img_cp,(bbox_x1,bbox_y1),(bbox_x2,bbox_y2),(0,0,255),2)
+    cv2.imshow("frame", cv_img_cp)
+    cv2.waitKey(1)
 
     rospy.loginfo(fi)
     print(fi)

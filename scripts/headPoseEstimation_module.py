@@ -55,11 +55,11 @@ def headPoseEstimation(image, keypoint_2d, keypoint_3d, nose_2d, nose_3d):
 
     # In[ ]:
     # Display the nose direction
-    # nose_3d_projection, jacobian = cv2.projectPoints(nose_3d, rot_vec, trans_vec, cam_matrix, dist_matrix,
-    #                                                  cv2.cv2.SOLVEPNP_ITERATIVE)
-    # p1 = (int(nose_2d[0]), int(nose_2d[1]))
-    # p2 = (int(nose_3d_projection[0][0][0]), int(nose_3d_projection[0][0][1]))
-    # cv2.line(image, p1, p2, (0, 255, 0), 3)  # Green
+    nose_3d_projection, jacobian = cv2.projectPoints(nose_3d, rot_vec, trans_vec, cam_matrix, dist_matrix,
+                                                     cv2.cv2.SOLVEPNP_ITERATIVE)
+    p1 = (int(nose_2d[0]), int(nose_2d[1]))
+    p2 = (int(nose_3d_projection[0][0][0]), int(nose_3d_projection[0][0][1]))
+    cv2.line(image, p1, p2, (0, 255, 0), 3)  # Green
 
     # Add the text on the image
     cv2.putText(image, text, (10, 30), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 0), 1)

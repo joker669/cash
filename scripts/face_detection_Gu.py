@@ -31,18 +31,25 @@ def get_coordinates(cv_img):
     	x = nose_bridge_location[0]
     	y = nose_bridge_location[1]
     	pitch, yaw = headPose.headPoseEstimation(image, keypoint_2d, keypoint_3d, nose_2d, nose_3d)
-
-    cv2.imshow('MediaPipe Face Mesh', image)
-    cv2.waitKey(1)
+    else:
+        x, y, pitch, yaw = -1,-1,-1,-1
+    # cv2.imshow('MediaPipe Face Mesh', image)
+    # cv2.waitKey(1)
 
     return x, y, pitch, yaw
 
 
-def callback(color_frame):
+def callback(color_frame, depth_frame):
     global bridge, count,face_pub
-    
+
+
     # get the frame info
     cv_img = bridge.imgmsg_to_cv2(color_frame,"bgr8")
+    cv_img_depth = bridge.imgmsg_to_cv2(depth_frame, "mono16")
+
+    # cv_img = cv2.flip(cv_img, 1) 
+    # cv_img_depth = cv2.flip(cv_img_depth, 1)
+
     count += 1
     print('receieved: frame',count,cv_img.shape )
     # cv2.imshow("frame", cv_img)
@@ -55,9 +62,9 @@ def callback(color_frame):
     x, y, pitch, yaw = get_coordinates(cv_img)
     
     fi = face_info()
-    fi.target_x = x
-    fi.target_y = y
-    # fi.depth = depth_frame[x,y]
+    fi.target_x = min(x,639)
+    fi.target_y = min(y,479)
+    fi.depth = cv_img_depth[fi.target_y][fi.target_x]
     fi.angle_yaw = yaw
     fi.angle_pitch = pitch
 
@@ -67,10 +74,10 @@ def callback(color_frame):
 
 def  subscriber():
     rospy.init_node('face_detection_node', anonymous=True)
-    rospy.Subscriber('/image_view/image_raw', Image, callback)
-    # tss = ApproximateTimeSynchronizer([Subscriber("/image_view/image_raw", Image),
-    #             Subscriber("/image_view/depth_image_raw", Image)],queue_size=5, slop=0.1)
-    # tss.registerCallback(callback)
+    # rospy.Subscriber('/image_view/image_raw', Image, callback)
+    tss = ApproximateTimeSynchronizer([Subscriber("/image_view/image_raw", Image),
+                Subscriber("/image_view/depth_image_raw", Image)],queue_size=5, slop=0.1)
+    tss.registerCallback(callback)
     rospy.spin()
     
     
