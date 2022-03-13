@@ -37,12 +37,13 @@ class arm:
         self.direction = {'L':'1', 'R':'2', 'F':'3','B':'4', 'U':'5','D':'6','WU':'7','WD':'8', 'H':'9', 'V':'0'}
         time.sleep(3)
     def sent2arm(self, cmd):
+        self.port.flushInput()
         for i in range(4):
-            self.port.flushInput()
             self.port.write(cmd.encode())
             time.sleep(0.05)
             OK = self.port.read(1).decode()
             if(OK == 'T'):
+                print('OK***********************88888888')
                 break;
             print(OK+'retry')
            

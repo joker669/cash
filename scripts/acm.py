@@ -15,6 +15,8 @@ center = [int(width/2), int(height/2)]
 target_x = center[0]
 target_y = center[1]
 
+stop = False
+
 # PID controller gain variables
 SAMPLETIME=0.5
 KP=0.02  #proportiaonal
@@ -44,10 +46,14 @@ def tracking_thread():
     global target_x
     global target_y
     global Is_tracking
+    global stop
     prev_error_y = 0
     a = arm()
 
     while(1):
+        if stop:
+            a.close()
+            return
         if Is_tracking:
             center_t = [target_x, target_y]
             sum_error_y = 0
@@ -117,7 +123,7 @@ def start_tracking(req):
       #回调函数 收到的参数.data是通信的数据 默认通过这样的 def callback(data) 取出data.data数据
 
 def acm():
-    
+    global stop
     # In ROS, nodes are uniquely named. If two nodes with the same
     # name are launched, the previous one is kicked off. The
     # anonymous=True flag means that rospy will choose a unique
@@ -134,6 +140,7 @@ def acm():
 
     # spin() simply keeps python from exiting until this node is stopped
     rospy.spin()
+    stop = True
 
 if __name__ == '__main__':
     acm()

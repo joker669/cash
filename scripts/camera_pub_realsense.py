@@ -78,7 +78,7 @@ def publisher():
             
 			end = time.time()
 			print("cost time:", end - start)  # to check if rate suitable
-			rate = rospy.Rate(25)  # 10hz
+			rate = rospy.Rate(30)  # 10hz
 
 	cv2.destroyAllWindows()
 
