@@ -2,7 +2,7 @@
 
 	<node
 		pkg="cash"
-		type="camera_pub.py"
+		type="camera_pub_realsense.py"
 		name="camera_pub"
 		required = "true"
 		output = "screen"

@@ -24,7 +24,7 @@ enum DIRECTION
 };
 '''
 class arm:
-    def __init__(self, serial_port = 'COM5'):
+    def __init__(self, serial_port = '/dev/ttyACM0'):
         self.port = serial.Serial(serial_port, 115200,timeout=1)
         ###the defination of parts, the key words of different joints of the arm from down to up
         self.part = {'BASE' : '0', 'SHOULDER':'1', 'ELBOW':'2', 'WRISTROTATION':'3', 'WRIST':'4'}

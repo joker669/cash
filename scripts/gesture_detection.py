@@ -50,7 +50,7 @@ def process_hand(cv_img):
 
 
 def callback(color_frame, depth_frame):
-    global bridge, count, face_pub
+    global bridge, count, gesture_pub
 
     # get the frame info
     cv_img = bridge.imgmsg_to_cv2(color_frame, "bgr8")
@@ -79,7 +79,7 @@ def callback(color_frame, depth_frame):
 
     rospy.loginfo(fi)
     print(fi)
-    face_pub.publish(fi)
+    gesture_pub.publish(fi)
 
 
 def subscriber():
@@ -95,7 +95,7 @@ if __name__ == '__main__':
     try:
         count = 0
         bridge = CvBridge()
-        face_pub = rospy.Publisher('gesture_info', gesture_info, queue_size=1)
+        gesture_pub = rospy.Publisher('gesture_info', gesture_info, queue_size=1)
         subscriber()
     except rospy.ROSInterruptException as E:
         print("quit unsuccessfully due  to ", E)

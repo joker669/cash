@@ -22,7 +22,7 @@ def boundary_checking(data):
     if target_x<=bbox_x1 or target_x>=bbox_x2 or target_y<=bbox_y1 or target_y>=bbox_y2 or depth<=bbox_z1 or depth>=bbox_z2:
         return False
     else:
-        return True
+        return False
 
 
 def face_callback(data):
@@ -34,12 +34,12 @@ def face_callback(data):
         
         if not inside and acm_mode == 'stop':
         
-            # tracking_client(1)
+            tracking_client(1)
             rospy.loginfo("call  acm")
             
         elif inside and acm_mode == 'start':
         
-            # tracking_client(2)
+            tracking_client(2)
             rospy.loginfo("stop  acm")
             
     rospy.loginfo("current acm_mode: {},  current system_mode: {}".format(acm_mode, system_mode))
@@ -62,12 +62,12 @@ def gesture_callback(data):
         
         if not inside and acm_mode == 'stop':
         
-            # tracking_client(1)
+            tracking_client(1)
             rospy.loginfo("call  acm")
             
         elif inside and acm_mode == 'start':
         
-            # tracking_client(2)
+            tracking_client(2)
             rospy.loginfo("stop  acm")
                     
     rospy.loginfo("current acm_mode: {},  current system_mode: {}".format(acm_mode, system_mode))
