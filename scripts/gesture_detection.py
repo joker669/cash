@@ -13,14 +13,40 @@ from message_filters import TimeSynchronizer, Subscriber,ApproximateTimeSynchron
 detector = HandDetector(detectionCon=0.8, maxHands=1)
 
 
-def get_gesture_class(finger_status):
-    # determined by the number of fingers are up
+def cal_angle(pt1, pt2, pt3):
+    # pt1: (x1,y1), pt2: (x2,y2), pt3: (x3,y3)
+    # pt2 is the base point of the angle
+    a = np.array(pt1)
+    b = np.array(pt2)
+    c = np.array(pt3)
+
+    ba = a - b
+    bc = c - b
+
+    cosine_angle = np.dot(ba, bc) / (np.linalg.norm(ba) * np.linalg.norm(bc))
+    angle = np.arccos(cosine_angle)
+
+    return np.degrees(angle)
+
+
+def get_gesture_class(landmarks):
+    # determined by the related position of landmarks
     class_no = 0
-    print(finger_status)
-    for finger in finger_status:
-        if finger == 1:
+
+    thumb_angle = cal_angle(landmarks[0][:2], landmarks[2][:2], landmarks[4][:2])
+    index_angle = cal_angle(landmarks[5][:2], landmarks[6][:2], landmarks[8][:2])
+    middle_angle = cal_angle(landmarks[9][:2], landmarks[10][:2], landmarks[12][:2])
+    ring_angle = cal_angle(landmarks[13][:2], landmarks[14][:2], landmarks[16][:2])
+    pinky_angle = cal_angle(landmarks[17][:2], landmarks[18][:2], landmarks[20][:2])
+    # print('finger angles: ', thumb_angle, index_angle, middle_angle, ring_angle, pinky_angle)
+
+    angles = [thumb_angle, index_angle, middle_angle, ring_angle, pinky_angle]
+
+    for angle in angles:
+        if angle >= 150:
             class_no += 1
 
+    print(class_no)
     return class_no
 
 
@@ -40,8 +66,8 @@ def process_hand(cv_img):
         # get center of hand
         center = list(hand["center"])
         # get gesture class
-        finger_status = detector.fingersUp(hand)
-        gesture_class = get_gesture_class(finger_status)
+        landmarks = hand["lmList"]
+        gesture_class = get_gesture_class(landmarks)
 
     if not center:
         print('WARNING: please use right hand for controlling!')  # return None, None
