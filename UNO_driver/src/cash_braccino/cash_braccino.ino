@@ -15,7 +15,8 @@ void setup() {
   delay(1000);
   for(int i=0; i < 5; i++){
     braccino.parts_direction[i] = 0;
-    braccino.parts_speed[i] = 20;
+    #braccino.parts_speed[i] = 20;
+	braccino.parts_speed[i] = 5; #start up position at slower speed to prevent whipping motion
     braccino.parts_state[i] = 0;
   }
   braccino.parts_state[BASE] = braccino.base.readMicroseconds();
