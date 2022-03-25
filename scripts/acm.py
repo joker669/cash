@@ -24,14 +24,17 @@ stop = False
 mode = 0
 
 # PID controller gain variables
-SAMPLETIME=0.5
 KP=0.5  #proportiaonal
-KD=0.01  #derivative
-KI=0.005 #integral
+KD=0.05  #derivative
+KI=0.00005 #integral
 
-# for vertical movement
-prev_error_y = 0
-sum_error_y = 0
+# Errors for vertical movement
+#prev_error_y = 0
+#sum_error_y = 0
+
+# Errors for horizontal movement
+#prev_error_x = 0
+#sum_error_x = 0
 
 def callback_face(data):
     global width
@@ -104,18 +107,22 @@ def tracking_thread():
             print('**********', target_x, target_y)
             di_x = 'R'
             di_y = 'R'
-            if(center_t[0] > center[0]):#############pid for Left and right
-                error_x = abs(center[1] - center_t[1])
+            if(center_t[0] - center[0] > 0):#############pid for Left and right
+                error_x = abs(center[0] - center_t[0])
                 speed_x =((error_x*KP) +(prev_error_x*KD) +(sum_error_x*KI))//10
                 speed_x = max(min(10, speed_x), 2)  # make sure speed don't go past max=10 or below min=2
                 di_x = 'R'
                 #speed_x = 5
-            elif(center_t[0] < center[0]):
-                error_x = abs(center[1] - center_t[1])
+                prev_error_x = error_x
+                sum_error_x += error_x
+            elif(center_t[0] - center[0] < 0):
+                error_x = abs(center[0] - center_t[0])
                 speed_x =((error_x*KP) +(prev_error_x*KD) +(sum_error_x*KI))//10
                 speed_x = max(min(10, speed_x), 2)  # make sure speed don't go past max=10 or below min=2
                 di_x = 'L'
                 #speed_x = 5
+                prev_error_x = error_x
+                sum_error_x += error_x
             else:
                 di_x = 'R'
                 speed_x = 0
