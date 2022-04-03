@@ -82,6 +82,8 @@ def tracking_thread():
     global stop
     prev_error_x = 0
     prev_error_y = 0
+    sum_error_x = 0
+    sum_error_y = 0
 
     a = arm()
 
@@ -101,10 +103,10 @@ def tracking_thread():
             center_t = [target_x, target_y]
             speed_x = 0
             speed_y = 0
-            sum_error_x = 0
-            sum_error_y = 0
+            #sum_error_x = 0
+            #sum_error_y = 0
 
-            print('**********', target_x, target_y)
+            #print('**********', target_x, target_y)
             di_x = 'R'
             di_y = 'R'
             if(center_t[0] - center[0] > 0):#############pid for Left and right
@@ -148,7 +150,7 @@ def tracking_thread():
             else:
                 di_y = 'D'
                 speed_y = 0
-            #print(, ' ', str(center[1]))
+            #print( ' ', str(center[1]))
             #print(di_y+str(speed_y))
             #a.set_joint('BASE', di_x, speed_x)
             a.set_joint('ELBOW', di_y, speed_y)
