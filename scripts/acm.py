@@ -12,6 +12,7 @@ from time import sleep
 import cv2
 
 Is_tracking = False
+Is_FB_tracking = False
 width = 640
 height = 480
 depth = -1
@@ -42,6 +43,7 @@ def callback_face(data):
     global target_x
     global target_y
     global mode
+    global depth
     if(mode == 1):
         return
     da = data
@@ -59,6 +61,7 @@ def callback_gesture(data):
     global target_x
     global target_y
     global mode
+    global depth
     if(mode == 2):
         return
     da = data
@@ -79,11 +82,15 @@ def tracking_thread():
     global target_x
     global target_y
     global Is_tracking
+    global Is_FB_tracking
     global stop
+    global depth
     prev_error_x = 0
     prev_error_y = 0
+    prev_error_z = 0
     sum_error_x = 0
     sum_error_y = 0
+    sum_error_z = 0
 
     a = arm()
 
@@ -99,16 +106,19 @@ def tracking_thread():
         if stop:
             a.close()
             return
-        if Is_tracking:
+        if Is_tracking: # Up/Down/Left/Right movement
+            a.set_joint('SHOULDER', 'B', 0)   #to prevent overshoot in SHOULDER when enter this mode
             center_t = [target_x, target_y]
             speed_x = 0
             speed_y = 0
+            #error_x = 0
+            #error_y = 0
             #sum_error_x = 0
             #sum_error_y = 0
 
             #print('**********', target_x, target_y)
             di_x = 'R'
-            di_y = 'R'
+            di_y = 'D'
             if(center_t[0] - center[0] > 0):#############pid for Left and right
                 error_x = abs(center[0] - center_t[0])
                 speed_x =((error_x*KP) +(prev_error_x*KD) +(sum_error_x*KI))//10
@@ -150,12 +160,42 @@ def tracking_thread():
             else:
                 di_y = 'D'
                 speed_y = 0
-            #print( ' ', str(center[1]))
+            #print(, ' ', str(center[1]))
             #print(di_y+str(speed_y))
             #a.set_joint('BASE', di_x, speed_x)
             a.set_joint('ELBOW', di_y, speed_y)
             a.set_joint('BASE', di_x, speed_x)
-            
+        
+        elif Is_FB_tracking: #Front/Back movement
+            a.set_joint('ELBOW', 'R', 0)   #to prevent overshoot in ELBOW when enter this mode
+            a.set_joint('BASE', 'D', 0)    #to prevent overshoot in BASE when enter this mode
+            speed_z = 0
+            #error_z = 0
+            #sum_error_z = 0
+            di_z = 'B'
+       
+            if(50 < depth and depth < 300): # sometimes depth returns 0 value
+                # error_z = abs(300 - depth)
+                # speed_z =((error_z*KP) +(prev_error_z*KD) +(sum_error_z*KI))//10
+                # speed_z = max(min(10, speed_z), 1)  # make sure speed don't go past max or below min
+                di_z = 'F'
+                speed_z = 7
+                # prev_error_z = error_z
+                # sum_error_z += error_z
+            elif(depth > 800):
+                # error_z = abs(depth - 800)
+                # speed_z =((error_z*KP) +(prev_error_z*KD) +(sum_error_z*KI))//10
+                # speed_z = max(min(10, speed_z), 1)  # make sure speed don't go past max or below min
+                di_z = 'B'
+                speed_z = 7
+                # prev_error_z = error_z
+                # sum_error_z += error_z
+            else:
+                di_z = 'B'
+                speed_z = 0
+
+            a.set_joint('SHOULDER', di_z, speed_z)
+        
         else:
             #print(str('****11111**************'))
             a.set_joint('BASE', 'L',0)
@@ -167,20 +207,29 @@ def tracking_thread():
         
 def start_tracking(req):
     global Is_tracking
+    global Is_FB_tracking
     global mode
     if(req.cmd == 2):
         rospy.loginfo("start tracking %d"%req.cmd)
         Is_tracking = True
+        Is_FB_tracking = False        
         mode = 1
     elif(req.cmd == 1):
         rospy.loginfo("stop tracking %d"%req.cmd)
         Is_tracking = False
+        Is_FB_tracking = False
+        mode = 1
+    elif(req.cmd == 5):#gesture front/ back
+        Is_tracking = False
+        Is_FB_tracking = True
         mode = 1
     elif(req.cmd == 3):#face start
         Is_tracking = True
+        Is_FB_tracking = False
         mode = 2
-    elif(req.cmd == 4):#face stop
+    elif(req.cmd == 4):#face front/ back
         Is_tracking = False
+        Is_FB_tracking = True
         mode = 2
         
     return trackingResponse(1)
@@ -197,7 +246,7 @@ def acm():
     #print('########start###############3')
     t_tracking = threading.Thread(target=tracking_thread)
     t_tracking.start()
-    #print("###############################33")
+    print("###############################def acm")
     
     rospy.Subscriber('gesture_info', gesture_info, callback_gesture)
     s = rospy.Service("tracking",tracking, start_tracking)#新建一个新的服务,服务类型calRectArea, 回调函数calArea

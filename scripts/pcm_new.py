@@ -16,6 +16,8 @@ def boundary_checking(data):
     frame_width = 640
     bbox_x1,bbox_x2 = frame_width/3,frame_width/3*2
     bbox_y1,bbox_y2 = frame_height/3,frame_height/3*2
+    # bbox_x1,bbox_x2 = frame_width/6,frame_width/6*5
+    # bbox_y1,bbox_y2 = frame_height/6,frame_height/6*5
     bbox_z1,bbox_z2 = 10,1000
     target_x = data.target_x
     target_y = data.target_y
@@ -32,18 +34,33 @@ def face_callback(data):
     if system_mode == 'face':
         rospy.loginfo(data)
         inside = boundary_checking(data)
+
+        # if not inside and acm_mode == 'stop':
         
-        if not inside and acm_mode == 'stop':
+            # tracking_client(3)
+            # acm_mode = 'start'
+            # rospy.loginfo("call  acm")
+            
+        # elif inside and acm_mode == 'start':
+        
+            # tracking_client(4)
+            # acm_mode = 'stop'
+            # rospy.loginfo("stop  acm")
+            
+        if not inside and (acm_mode == 'stop' or acm_mode == 'start FB'):
+        #if not inside:
         
             tracking_client(3)
             acm_mode = 'start'
-            rospy.loginfo("call  acm")
+            rospy.loginfo("call U/D/L/R acm")
             
-        elif inside and acm_mode == 'start':
+        elif inside and (acm_mode == 'stop' or acm_mode == 'start'):
+        #elif inside:
         
             tracking_client(4)
-            acm_mode = 'stop'
-            rospy.loginfo("stop  acm")
+            acm_mode = 'start FB'
+            #acm_mode = 'start'
+            rospy.loginfo("call F/B acm")
             
     rospy.loginfo("current acm_mode: {},  current system_mode: {}".format(acm_mode, system_mode))
 
@@ -64,18 +81,25 @@ def gesture_callback(data):
         rospy.loginfo(data)
         inside = boundary_checking(data)
         
-        if not inside and acm_mode == 'stop':
+        if not inside and (acm_mode == 'stop' or acm_mode == 'start FB'):
         
             tracking_client(2)
             acm_mode = 'start'
-            rospy.loginfo("call  acm")
-            
-        elif inside and acm_mode == 'start':
+            rospy.loginfo("call U/D/L/R acm")
+
+        # elif inside and (acm_mode == 'start' or acm_mode == 'start FB'):
         
-            tracking_client(1)
-            acm_mode = 'stop'
-            rospy.loginfo("stop  acm")
-                    
+            # tracking_client(1)
+            # acm_mode = 'stop'
+            # rospy.loginfo("stop  acm")                  
+            
+        elif inside and (acm_mode == 'stop' or acm_mode == 'start'):
+        
+            tracking_client(5)
+            acm_mode = 'start FB'
+            #acm_mode = 'start'
+            rospy.loginfo("call F/B acm")
+                                     
     rospy.loginfo("current acm_mode: {},  current system_mode: {}".format(acm_mode, system_mode))
 
 
