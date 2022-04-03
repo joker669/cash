@@ -37,13 +37,13 @@ def publisher():
 
 		if depth_frame and color_frame:  # if get frame
 			depth_frame = np.asanyarray(depth_frame.get_data())
-			# depth_frame = cv2.flip(depth_frame, 1) 
+			depth_frame = cv2.flip(depth_frame, 1) 
 			#depth_frame = np.full(depth_frame.shape, 33)
 			print(depth_frame.shape)
 
 			# only RGB channels are included in the msg now
 			color_frame = np.asanyarray(color_frame.get_data())
-			# color_frame = cv2.flip(color_frame, 1)
+			color_frame = cv2.flip(color_frame, 1)
 
 			# color_depth_frame = np.concatenate((color_frame, depth_frame), axis = 2)
 			# print(color_depth_frame[:5,:5,0], color_depth_frame[:5,:5,1], color_depth_frame[:5,:5,2], color_depth_frame[:5,:5,3])

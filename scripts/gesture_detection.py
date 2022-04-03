@@ -60,7 +60,7 @@ def process_hand(cv_img):
         return center, gesture_class  # return None, None
 
     for hand in hands:
-        if hand["type"] != 'Right':  # control only with right hand
+        if hand["type"] != 'Left':  # control only with right hand in flipped image
             continue
 
         # get center of hand

@@ -113,7 +113,7 @@ def tracking_thread():
                 error_x = abs(center[0] - center_t[0])
                 speed_x =((error_x*KP) +(prev_error_x*KD) +(sum_error_x*KI))//10
                 speed_x = max(min(10, speed_x), 1)  # make sure speed don't go past max or below min
-                di_x = 'R'
+                di_x = 'L'
                 #speed_x = 5
                 prev_error_x = error_x
                 sum_error_x += error_x
@@ -121,7 +121,7 @@ def tracking_thread():
                 error_x = abs(center[0] - center_t[0])
                 speed_x =((error_x*KP) +(prev_error_x*KD) +(sum_error_x*KI))//10
                 speed_x = max(min(10, speed_x), 1)  # make sure speed don't go past max or below min
-                di_x = 'L'
+                di_x = 'R'
                 #speed_x = 5
                 prev_error_x = error_x
                 sum_error_x += error_x
