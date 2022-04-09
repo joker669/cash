@@ -42,9 +42,11 @@ def neck_alert_info(color_frame):
         
         x = nose_bridge_location[0]
         y = nose_bridge_location[1]
-        pitch, yaw, ih, iw = headPose.headPoseEstimation(image, keypoint_2d, keypoint_3d, nose_2d, nose_3d)
+        #pitch, yaw, ih, iw = headPose.headPoseEstimation(image, keypoint_2d, keypoint_3d, nose_2d, nose_3d)  # original
+        pitch, yaw = headPose.headPoseEstimation(image, keypoint_2d, keypoint_3d, nose_2d, nose_3d)
 
-        if yaw < -30 or yaw > 30 or pitch < -30 or pitch > 30:
+        #if yaw < -30 or yaw > 30 or pitch < -30 or pitch > 30:
+        if yaw < -10 or yaw > 30:
             s += 1
             t = str(s//24)
             #cv2.putText(image, t, (10, 60), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 255), 1)
