@@ -13,11 +13,15 @@ import numpy as np
 import cv2
 from cash.msg import gesture_info
 from cv_bridge import CvBridge, CvBridgeError
-import os
+import os, sys
+
+APP_FOLDER = os.path.dirname(os.path.realpath(sys.argv[0]))
+full_path = os.path.join(APP_FOLDER, "neck_warning.mp3")
 
 s = 0
 pygame.mixer.init()
-sound_file = pygame.mixer.Sound('/home/xuxuanbo/cash_ws/src/cash/scripts/warning.mp3')
+#sound_file = pygame.mixer.Sound('/home/xuxuanbo/cash_ws/src/cash/scripts/warning.mp3')
+sound_file = pygame.mixer.Sound(full_path)
 
 def neck_alert_info(color_frame):
     global s
