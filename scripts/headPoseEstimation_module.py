@@ -50,11 +50,8 @@ def headPoseEstimation(image, keypoint_2d, keypoint_3d, nose_2d, nose_3d):
     #     text = "Looking Down"
     # elif pitch > 10:
     #     text = "Looking Up"
-
-
     # else:
-    #     text = "Normal"
-    #     cv2.putText(image, text, (10, 30), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 0), 1)
+    #     text = "Forward"
 
     # In[ ]:
     # Display the nose direction
