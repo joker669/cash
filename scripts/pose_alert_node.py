@@ -42,27 +42,28 @@ def neck_alert_info(color_frame):
         
         x = nose_bridge_location[0]
         y = nose_bridge_location[1]
-        #pitch, yaw, ih, iw = headPose.headPoseEstimation(image, keypoint_2d, keypoint_3d, nose_2d, nose_3d)  # original
-        pitch, yaw = headPose.headPoseEstimation(image, keypoint_2d, keypoint_3d, nose_2d, nose_3d)
+        pitch, yaw, ih, iw = headPose.headPoseEstimation(image, keypoint_2d, keypoint_3d, nose_2d, nose_3d)  # original
+        #pitch, yaw = headPose.headPoseEstimation(image, keypoint_2d, keypoint_3d, nose_2d, nose_3d)
 
-        #if yaw < -30 or yaw > 30 or pitch < -30 or pitch > 30:
-        if yaw < -10 or yaw > 30:
+        if yaw < -15 or yaw > 15 or pitch < -15 or pitch > 15:
+        #if yaw < -30 or yaw > 30:
             s += 1
             t = str(s//24)
-            #cv2.putText(image, t, (10, 60), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 255), 1)
+            cv2.putText(image, t, (10, 60), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 255), 1)
             if s > 2*24:
-                text = "Warning: Bad pose"
+                text = "Warning: Bad Neck Posture Detected"
                 message = True
-                #cv2.putText(image, text, (10, 30), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 255), 2)
-                #cv2.rectangle(image, (5, 5), (iw - 5, ih - 5), (0, 0, 255), 2)
+                cv2.putText(image, text, (10, 30), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 255), 2)
+                cv2.rectangle(image, (5, 5), (iw - 5, ih - 5), (0, 0, 255), 2)
                 # os.system("say 'Warning: Bad pose'")
                 sound_file.play()
         else:
+            sound_file.stop()
             s = 0
             message = False
 
-        #cv2.imshow('MediaPipe Face Mesh', image)
-        #cv2.waitKey(1)
+        cv2.imshow('MediaPipe Face Mesh', image)
+        cv2.waitKey(1)
 
     #cap.release()
 

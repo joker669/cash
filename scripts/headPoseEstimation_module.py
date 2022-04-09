@@ -67,5 +67,5 @@ def headPoseEstimation(image, keypoint_2d, keypoint_3d, nose_2d, nose_3d):
     cv2.putText(image, "pitch: " + str(np.round(pitch, 1)), (10, 90), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 0), 1)
     cv2.putText(image, "yaw: " + str(np.round(yaw, 1)), (10, 120), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 0), 1)
 
-    #return pitch, yaw, ih, iw
-    return pitch, yaw
+    return pitch, yaw, ih, iw
+    #return pitch, yaw

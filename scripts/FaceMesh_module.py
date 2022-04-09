@@ -73,6 +73,6 @@ class FaceMeshDetector:
                         nose_2d = (x, landmark.y * ih)
                         nose_3d = (landmark.x * iw, landmark.y * ih, landmark.z * 5000)
                     keypoint_2d.append([x, y])
-                    keypoint_3d.append([x, y, landmark.z * 4])
+                    keypoint_3d.append([x, y, landmark.z * 2])
 
         return image, face, keypoint_2d, keypoint_3d, nose_2d, nose_3d

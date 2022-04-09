@@ -5,7 +5,7 @@ import cv2
 import FaceMesh_module as faceMesh
 import headPoseEstimation_module as headPose
 import time
-import os
+import os, sys
 #from playsound import playsound
 import pygame
 
@@ -45,7 +45,7 @@ if __name__ == "__main__":
                 t = str(s//24)
                 cv2.putText(image, t, (10, 60), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 255), 1)
                 if s > 2*24:
-                    text = "Warning: Bad pose"
+                    text = "Warning: Bad Neck Posture Detected"
                     cv2.putText(image, text, (10, 30), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 255), 2)
                     #cv2.rectangle(image, (5, 5), (iw - 5, ih - 5), (0, 0, 255), 2)
                     # os.system("say 'Warning: Bad pose'")
