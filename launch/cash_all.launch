@@ -34,5 +34,11 @@
 		respawn="false"
 	/>
 
+	<node
+		pkg="cash"
+		type="pose_alert_node.py"
+		name="alert"
+		respawn="false"
+	/>
 
 </launch>
