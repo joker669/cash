@@ -42,16 +42,19 @@ def headPoseEstimation(image, keypoint_2d, keypoint_3d, nose_2d, nose_3d):
     # rot_params = [pitch, yaw, roll]
 
     # See where the user's head tilting
-    if yaw < -10:
-        text = "Looking Left"
-    elif yaw > 10:
-        text = "Looking Right"
-    elif pitch < -10:
-        text = "Looking Down"
-    elif pitch > 10:
-        text = "Looking Up"
-    else:
-        text = "Forward"
+    # if yaw < -10:
+    #     text = "Looking Left"
+    # elif yaw > 10:
+    #     text = "Looking Right"
+    # elif pitch < -10:
+    #     text = "Looking Down"
+    # elif pitch > 10:
+    #     text = "Looking Up"
+
+
+    # else:
+    #     text = "Normal"
+    #     cv2.putText(image, text, (10, 30), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 0), 1)
 
     # In[ ]:
     # Display the nose direction
@@ -62,9 +65,9 @@ def headPoseEstimation(image, keypoint_2d, keypoint_3d, nose_2d, nose_3d):
     cv2.line(image, p1, p2, (0, 255, 0), 3)  # Green
 
     # Add the text on the image
-    cv2.putText(image, text, (10, 30), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 0), 1)
+    # cv2.putText(image, text, (10, 30), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 0), 1)
     # cv2.putText(image, "roll: " + str(np.round(roll, 1)), (10, 130), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 255), 1)
-    cv2.putText(image, "pitch: " + str(np.round(pitch, 1)), (10, 70), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 255), 1)
-    cv2.putText(image, "yaw: " + str(np.round(yaw, 1)), (10, 100), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 255), 1)
+    cv2.putText(image, "pitch: " + str(np.round(pitch, 1)), (10, 90), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 0), 1)
+    cv2.putText(image, "yaw: " + str(np.round(yaw, 1)), (10, 120), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 0), 1)
 
-    return pitch, yaw
+    return pitch, yaw, ih, iw
