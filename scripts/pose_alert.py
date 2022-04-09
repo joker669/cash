@@ -6,8 +6,14 @@ import FaceMesh_module as faceMesh
 import headPoseEstimation_module as headPose
 import time
 import os
-from playsound import playsound
+#from playsound import playsound
+import pygame
+
 s = 0
+APP_FOLDER = os.path.dirname(os.path.realpath(sys.argv[0]))
+full_path = os.path.join(APP_FOLDER, "neck_warning.mp3")
+pygame.mixer.init()
+sound_file = pygame.mixer.Sound(full_path)
 
 if __name__ == "__main__":
     detector = faceMesh.FaceMeshDetector()
@@ -43,7 +49,8 @@ if __name__ == "__main__":
                     cv2.putText(image, text, (10, 30), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 255), 2)
                     #cv2.rectangle(image, (5, 5), (iw - 5, ih - 5), (0, 0, 255), 2)
                     # os.system("say 'Warning: Bad pose'")
-                    playsound('warning.mp3',True)
+                    #playsound('warning.mp3',True)
+                    sound_file.play()
             else:
                 s = 0
 
