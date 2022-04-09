@@ -5,6 +5,7 @@
 import cv2
 import mediapipe as mp
 
+
 # In[ ]:
 class FaceMeshDetector:
 
@@ -70,9 +71,8 @@ class FaceMeshDetector:
                     cv2.circle(image, face[idx], 3, (0, 255, 255), -1)
                     if idx == 4:
                         nose_2d = (x, landmark.y * ih)
-                        nose_3d = (landmark.x * iw, landmark.y * ih, landmark.z * 3000)
+                        nose_3d = (landmark.x * iw, landmark.y * ih, landmark.z * 5000)
                     keypoint_2d.append([x, y])
-                    keypoint_3d.append([x, y, landmark.z * 1.8])
+                    keypoint_3d.append([x, y, landmark.z * 4])
 
         return image, face, keypoint_2d, keypoint_3d, nose_2d, nose_3d
-    
