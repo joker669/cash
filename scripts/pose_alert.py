@@ -43,7 +43,7 @@ if __name__ == "__main__":
                     cv2.putText(image, text, (10, 30), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 255), 2)
                     cv2.rectangle(image, (5, 5), (iw - 5, ih - 5), (0, 0, 255), 2)
                     # os.system("say 'Warning: Bad pose'")
-                    # playsound('warning.mp3')
+                    playsound('warning.mp3',True)
             else:
                 s = 0
 
