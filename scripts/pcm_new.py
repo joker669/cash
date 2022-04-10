@@ -5,11 +5,13 @@ import rospy
 import cv2
 import time
 import numpy as np  
-from cash.msg import face_info,gesture_info
-from cash.srv import tracking
+from cash.msg import face_info, gesture_info
+from cash.srv import tracking, sound
 
 acm_mode = 'start' # ['start','stop']
 system_mode = 'face' # ['face','gesture','frozen']
+bad_frames = 0
+
 
 def boundary_checking(data):
     frame_height = 480
@@ -22,15 +24,39 @@ def boundary_checking(data):
     target_x = data.target_x
     target_y = data.target_y
     depth = data.depth
-
+    if target_x == target_y == -1:
+        return True
     if target_x<=bbox_x1 or target_x>=bbox_x2 or target_y<=bbox_y1 or target_y>=bbox_y2:
         return False
     else:
         return True
 
 
+def check_Neck_Posture(data):
+    global bad_frames
+    yaw = data.angle_yaw
+    pitch = data.angle_pitch
+    if yaw < -20 or yaw > 20 or pitch < -15 or pitch > 15:
+        bad_frames += 1
+        t = str(bad_frames // 24)
+        if bad_frames > 2 * 24:
+            text = "Warning: Bad Neck Posture Detected"
+            print(text)
+            return False
+    else:
+        # sound_file.stop()
+        bad_frames = 0
+        # message = False
+        return True
+
+
 def face_callback(data):
     global system_mode, acm_mode
+    if not check_Neck_Posture(data):
+        sound_client(1)
+    else:
+        sound_client(2)
+    
     if system_mode == 'face':
         rospy.loginfo(data)
         inside = boundary_checking(data)
@@ -111,10 +137,22 @@ def tracking_client(cmd):
         # 创建服务的处理句柄,可以像调用函数一样，调用句柄
         tracking_s = rospy.ServiceProxy('tracking', tracking)
         resp1 = tracking_s(cmd)
-        print("Service call success: %s"%resp1.rsp)
+        print("Tracking Service call success: %s"%resp1.rsp)
         return resp1.rsp #如果调用失败，可能会抛出rospy.ServiceException
     except rospy.ServiceException as e:     
-        print("Service call failed: %s"%e)
+        print("Tracking Service call failed: %s"%e)
+
+
+def sound_client(cmd):
+    rospy.wait_for_service('sound')
+    try: 
+        # 创建服务的处理句柄,可以像调用函数一样，调用句柄
+        sound_s = rospy.ServiceProxy('sound', sound)
+        resp1 = sound_s(cmd)
+        print("Sound Service call success: %s, cmd:%s"%(resp1.rsp,cmd))
+        return resp1.rsp #如果调用失败，可能会抛出rospy.ServiceException
+    except rospy.ServiceException as e:     
+        print("Sound Service call failed: %s"%e)
 
 
 def pcm():
