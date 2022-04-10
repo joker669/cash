@@ -29,9 +29,9 @@ def play_sound_thread():
         if alert:
                 if pygame.mixer.music.get_busy()==False:
                     pygame.mixer.music.play()
-        else:
-                pygame.mixer.music.stop()
-                pygame.mixer.music.load(full_path)
+        # else:  # comment off to ensure warning msg play fully before stopped and avoid played multi times
+                # pygame.mixer.music.stop()
+                # pygame.mixer.music.load(full_path)
 
 def sound_play_stop(req):
     global alert
@@ -58,5 +58,5 @@ def sound_player():
     stop = True
 
 
-if __name__ == '__main__':s
+if __name__ == '__main__':
     sound_player()
