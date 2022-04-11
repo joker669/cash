@@ -167,8 +167,8 @@ def tracking_thread():
             a.set_joint('BASE', di_x, speed_x)
         
         elif Is_FB_tracking: #Front/Back movement
-            a.set_joint('ELBOW', 'R', 0)   #to prevent overshoot in ELBOW when enter this mode
-            a.set_joint('BASE', 'D', 0)    #to prevent overshoot in BASE when enter this mode
+            a.set_joint('ELBOW', 'D', 0)   #to prevent overshoot in ELBOW when enter this mode
+            a.set_joint('BASE', 'R', 0)    #to prevent overshoot in BASE when enter this mode
             speed_z = 0
             #error_z = 0
             #sum_error_z = 0
