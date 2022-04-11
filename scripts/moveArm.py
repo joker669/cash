@@ -35,6 +35,7 @@ class arm:
         ###WRISTROTATION --> Wrist UP & Wrist down
         ###WRIST --> Vertical & horizontal
         self.direction = {'L':'1', 'R':'2', 'F':'3','B':'4', 'U':'5','D':'6','WU':'7','WD':'8', 'H':'9', 'V':'0'}
+        self.speed = {'BASE' : ['',0], 'SHOULDER':['',0], 'ELBOW': ['',0], 'WRISTROTATION': ['',0], 'WRIST': ['',0]}
         time.sleep(3)
     def sent2arm(self, cmd):
         for i in range(4):
@@ -50,9 +51,11 @@ class arm:
         speed = max(0, speed)
         speed = min(50, speed)
         speed = int(speed)
-        cmd = 'S'+ self.part[joint]+self.direction[direction]+str(speed).zfill(3)+'\n'
-        #print(cmd)
-        self.sent2arm(cmd)
+        if(self.speed[joint][1] != speed or self.speed[joint][0] != direction):
+            self.speed[joint] = speed
+            cmd = 'S'+ self.part[joint]+self.direction[direction]+str(speed).zfill(3)+'\n'
+            #print(cmd)
+            self.sent2arm(cmd)
         
     def close(self):
         self.port.close()

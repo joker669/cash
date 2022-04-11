@@ -54,6 +54,7 @@ def callback_face(data):
     else:
         target_x = center[0]
         target_y = center[1]
+        depth = -1
 
 def callback_gesture(data):
     global width
@@ -72,6 +73,7 @@ def callback_gesture(data):
     else:
         target_x = center[0]
         target_y = center[1]
+        depth = -1
         
     #print(center)
     #rospy.loginfo("receive")
@@ -107,7 +109,7 @@ def tracking_thread():
             a.close()
             return
         if Is_tracking: # Up/Down/Left/Right movement
-            a.set_joint('SHOULDER', 'B', 0)   #to prevent overshoot in SHOULDER when enter this mode
+            #a.set_joint('SHOULDER', 'B', 0)   #to prevent overshoot in SHOULDER when enter this mode
             center_t = [target_x, target_y]
             speed_x = 0
             speed_y = 0
@@ -165,17 +167,10 @@ def tracking_thread():
             #a.set_joint('BASE', di_x, speed_x)
             a.set_joint('ELBOW', di_y, speed_y)
             a.set_joint('BASE', di_x, speed_x)
-        else:
-            #print(str('****11111**************'))
-            a.set_joint('BASE', 'L',0)
-            a.set_joint('SHOULDER', 'F',0)
-            a.set_joint('ELBOW', 'U', 0)
-            a.set_joint('WRISTROTATION', 'WU', 0)
-            a.set_joint('WRIST', 'V', 0)
         
-        if Is_FB_tracking: #Front/Back movement
-            a.set_joint('ELBOW', 'D', 0)   #to prevent overshoot in ELBOW when enter this mode
-            a.set_joint('BASE', 'R', 0)    #to prevent overshoot in BASE when enter this mode
+        #if Is_FB_tracking: #Front/Back movement
+            #a.set_joint('ELBOW', 'D', 0)   #to prevent overshoot in ELBOW when enter this mode
+            #a.set_joint('BASE', 'R', 0)    #to prevent overshoot in BASE when enter this mode
             speed_z = 0
             #error_z = 0
             #sum_error_z = 0
@@ -227,15 +222,15 @@ def start_tracking(req):
         Is_FB_tracking = False
         mode = 1
     elif(req.cmd == 5):#gesture front/ back
-        Is_tracking = False
+        Is_tracking = True
         Is_FB_tracking = True
         mode = 1
     elif(req.cmd == 3):#face start
         Is_tracking = True
-        Is_FB_tracking = False
+        Is_FB_tracking = True
         mode = 2
     elif(req.cmd == 4):#face front/ back
-        Is_tracking = False
+        Is_tracking = True
         Is_FB_tracking = True
         mode = 2
         
