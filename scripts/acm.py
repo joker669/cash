@@ -165,8 +165,15 @@ def tracking_thread():
             #a.set_joint('BASE', di_x, speed_x)
             a.set_joint('ELBOW', di_y, speed_y)
             a.set_joint('BASE', di_x, speed_x)
+        else:
+            #print(str('****11111**************'))
+            a.set_joint('BASE', 'L',0)
+            a.set_joint('SHOULDER', 'F',0)
+            a.set_joint('ELBOW', 'U', 0)
+            a.set_joint('WRISTROTATION', 'WU', 0)
+            a.set_joint('WRIST', 'V', 0)
         
-        elif Is_FB_tracking: #Front/Back movement
+        if Is_FB_tracking: #Front/Back movement
             a.set_joint('ELBOW', 'D', 0)   #to prevent overshoot in ELBOW when enter this mode
             a.set_joint('BASE', 'R', 0)    #to prevent overshoot in BASE when enter this mode
             speed_z = 0
@@ -212,7 +219,7 @@ def start_tracking(req):
     if(req.cmd == 2):
         rospy.loginfo("start tracking %d"%req.cmd)
         Is_tracking = True
-        Is_FB_tracking = False        
+        Is_FB_tracking = True        
         mode = 1
     elif(req.cmd == 1):
         rospy.loginfo("stop tracking %d"%req.cmd)
