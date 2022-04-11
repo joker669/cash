@@ -176,7 +176,7 @@ def tracking_thread():
             #sum_error_z = 0
             di_z = 'B'
        
-            if(50 < depth and depth < 300): # sometimes depth returns 0 value
+            if(0 <= depth and depth < 350): # sometimes depth returns 0 value
                 # error_z = abs(300 - depth)
                 # speed_z =((error_z*KP) +(prev_error_z*KD) +(sum_error_z*KI))//10
                 # speed_z = max(min(10, speed_z), 1)  # make sure speed don't go past max or below min
