@@ -52,7 +52,8 @@ class arm:
         speed = min(50, speed)
         speed = int(speed)
         if(self.speed[joint][1] != speed or self.speed[joint][0] != direction):
-            self.speed[joint] = speed
+            self.speed[joint][1] = speed
+            self.speed[joint][0] = direction
             cmd = 'S'+ self.part[joint]+self.direction[direction]+str(speed).zfill(3)+'\n'
             #print(cmd)
             self.sent2arm(cmd)
