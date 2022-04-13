@@ -9,7 +9,7 @@
 
 	<node
 		pkg="cash"
-		type="face_detection_Gu.py"
+		type="face_detection_and_pose_alert.py"
 		name="face_detection"
 	/>
 
@@ -36,7 +36,7 @@
 
 	<node
 		pkg="cash"
-		type="pose_alert_node.py"
+		type="sound_player.py"
 		name="alert"
 		respawn="false"
 	/>
