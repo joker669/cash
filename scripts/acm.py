@@ -117,14 +117,14 @@ def tracking_thread():
             if(center_t[0] - center[0] > 0):#############pid for Left and right
                 error_x = abs(center[0] - center_t[0])
                 speed_x =((error_x*KP) +(prev_error_x*KD) +(sum_error_x*KI))//10
-                speed_x = max(min(15, speed_x), 1)  # make sure speed don't go past max(prevent whipping motion) or below min
+                speed_x = max(min(10, speed_x), 1)  # make sure speed don't go past max(prevent whipping motion) or below min
                 di_x = 'L'
                 prev_error_x = error_x
                 sum_error_x += error_x
             elif(center_t[0] - center[0] < 0):
                 error_x = abs(center[0] - center_t[0])
                 speed_x =((error_x*KP) +(prev_error_x*KD) +(sum_error_x*KI))//10
-                speed_x = max(min(15, speed_x), 1)  # make sure speed don't go past max(prevent whipping motion) or below min
+                speed_x = max(min(10, speed_x), 1)  # make sure speed don't go past max(prevent whipping motion) or below min
                 di_x = 'R'
                 prev_error_x = error_x
                 sum_error_x += error_x
@@ -135,7 +135,7 @@ def tracking_thread():
             if(center_t[1] - center[1] > 0):#############pid for up & down
                 error_y = abs(center[1] - center_t[1])
                 speed_y =((error_y*KP) +(prev_error_y*KD) +(sum_error_y*KI))//10
-                speed_y = max(min(15, speed_y), 1)  # make sure speed don't go past max(prevent whipping motion) or below min
+                speed_y = max(min(10, speed_y), 1)  # make sure speed don't go past max(prevent whipping motion) or below min
                 di_y = 'D'
                 #speed_y = 5
                 prev_error_y = error_y
@@ -144,7 +144,7 @@ def tracking_thread():
             elif(center_t[1] - center[1] < 0):
                 error_y = abs(center[1] - center_t[1])
                 speed_y =((error_y*KP) +(prev_error_y*KD) +(sum_error_y*KI))//10
-                speed_y = max(min(15, speed_y), 1)  # make sure speed don't go past max(prevent whipping motion) or below min
+                speed_y = max(min(10, speed_y), 1)  # make sure speed don't go past max(prevent whipping motion) or below min
                 di_y = 'U'
                 #speed_y = 5
                 prev_error_y = error_y
