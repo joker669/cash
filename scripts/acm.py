@@ -54,7 +54,6 @@ def callback_face(data):
     else:
         target_x = center[0]
         target_y = center[1]
-        depth = -1
 
 def callback_gesture(data):
     global width
@@ -73,7 +72,6 @@ def callback_gesture(data):
     else:
         target_x = center[0]
         target_y = center[1]
-        depth = -1
         
     #print(center)
     #rospy.loginfo("receive")
@@ -109,32 +107,25 @@ def tracking_thread():
             a.close()
             return
         if Is_tracking: # Up/Down/Left/Right movement
-            #a.set_joint('SHOULDER', 'B', 0)   #to prevent overshoot in SHOULDER when enter this mode
+            a.set_joint('SHOULDER', 'B', 0)   #to prevent overshoot in SHOULDER when enter this mode
             center_t = [target_x, target_y]
             speed_x = 0
             speed_y = 0
-            #error_x = 0
-            #error_y = 0
-            #sum_error_x = 0
-            #sum_error_y = 0
 
-            #print('**********', target_x, target_y)
             di_x = 'R'
             di_y = 'D'
             if(center_t[0] - center[0] > 0):#############pid for Left and right
                 error_x = abs(center[0] - center_t[0])
                 speed_x =((error_x*KP) +(prev_error_x*KD) +(sum_error_x*KI))//10
-                speed_x = max(min(10, speed_x), 1)  # make sure speed don't go past max or below min
+                speed_x = max(min(15, speed_x), 1)  # make sure speed don't go past max(prevent whipping motion) or below min
                 di_x = 'L'
-                #speed_x = 5
                 prev_error_x = error_x
                 sum_error_x += error_x
             elif(center_t[0] - center[0] < 0):
                 error_x = abs(center[0] - center_t[0])
                 speed_x =((error_x*KP) +(prev_error_x*KD) +(sum_error_x*KI))//10
-                speed_x = max(min(10, speed_x), 1)  # make sure speed don't go past max or below min
+                speed_x = max(min(15, speed_x), 1)  # make sure speed don't go past max(prevent whipping motion) or below min
                 di_x = 'R'
-                #speed_x = 5
                 prev_error_x = error_x
                 sum_error_x += error_x
             else:
@@ -144,7 +135,7 @@ def tracking_thread():
             if(center_t[1] - center[1] > 0):#############pid for up & down
                 error_y = abs(center[1] - center_t[1])
                 speed_y =((error_y*KP) +(prev_error_y*KD) +(sum_error_y*KI))//10
-                speed_y = max(min(10, speed_y), 1)  # make sure speed don't go past max or below min
+                speed_y = max(min(15, speed_y), 1)  # make sure speed don't go past max(prevent whipping motion) or below min
                 di_y = 'D'
                 #speed_y = 5
                 prev_error_y = error_y
@@ -153,7 +144,7 @@ def tracking_thread():
             elif(center_t[1] - center[1] < 0):
                 error_y = abs(center[1] - center_t[1])
                 speed_y =((error_y*KP) +(prev_error_y*KD) +(sum_error_y*KI))//10
-                speed_y = max(min(10, speed_y), 1)  # make sure speed don't go past max or below min
+                speed_y = max(min(15, speed_y), 1)  # make sure speed don't go past max(prevent whipping motion) or below min
                 di_y = 'U'
                 #speed_y = 5
                 prev_error_y = error_y
@@ -168,15 +159,15 @@ def tracking_thread():
             a.set_joint('ELBOW', di_y, speed_y)
             a.set_joint('BASE', di_x, speed_x)
         
-        #if Is_FB_tracking: #Front/Back movement
-            #a.set_joint('ELBOW', 'D', 0)   #to prevent overshoot in ELBOW when enter this mode
-            #a.set_joint('BASE', 'R', 0)    #to prevent overshoot in BASE when enter this mode
+        elif Is_FB_tracking: #Front/Back movement
+            a.set_joint('ELBOW', 'D', 0)   #to prevent overshoot in ELBOW when enter this mode
+            a.set_joint('BASE', 'R', 0)    #to prevent overshoot in BASE when enter this mode
             speed_z = 0
             #error_z = 0
             #sum_error_z = 0
             di_z = 'B'
        
-            if(0 <= depth and depth < 350): # sometimes depth returns 0 value
+            if(50 < depth and depth < 300): # sometimes depth returns 0 value
                 # error_z = abs(300 - depth)
                 # speed_z =((error_z*KP) +(prev_error_z*KD) +(sum_error_z*KI))//10
                 # speed_z = max(min(10, speed_z), 1)  # make sure speed don't go past max or below min
@@ -184,7 +175,7 @@ def tracking_thread():
                 speed_z = 7
                 # prev_error_z = error_z
                 # sum_error_z += error_z
-            elif(depth > 800):
+            elif(depth > 900):
                 # error_z = abs(depth - 800)
                 # speed_z =((error_z*KP) +(prev_error_z*KD) +(sum_error_z*KI))//10
                 # speed_z = max(min(10, speed_z), 1)  # make sure speed don't go past max or below min
@@ -214,7 +205,7 @@ def start_tracking(req):
     if(req.cmd == 2):
         rospy.loginfo("start tracking %d"%req.cmd)
         Is_tracking = True
-        Is_FB_tracking = True        
+        Is_FB_tracking = False        
         mode = 1
     elif(req.cmd == 1):
         rospy.loginfo("stop tracking %d"%req.cmd)
@@ -222,15 +213,15 @@ def start_tracking(req):
         Is_FB_tracking = False
         mode = 1
     elif(req.cmd == 5):#gesture front/ back
-        Is_tracking = True
+        Is_tracking = False
         Is_FB_tracking = True
         mode = 1
     elif(req.cmd == 3):#face start
         Is_tracking = True
-        Is_FB_tracking = True
+        Is_FB_tracking = False
         mode = 2
     elif(req.cmd == 4):#face front/ back
-        Is_tracking = True
+        Is_tracking = False
         Is_FB_tracking = True
         mode = 2
         
