@@ -5,15 +5,13 @@ import cv2
 import FaceMesh_module as faceMesh
 import headPoseEstimation_module as headPose
 import time
-import os, sys
-#from playsound import playsound
+import os
+from playsound import playsound
+s = 0
 import pygame
 
-s = 0
-APP_FOLDER = os.path.dirname(os.path.realpath(sys.argv[0]))
-full_path = os.path.join(APP_FOLDER, "neck_warning.mp3")
 pygame.mixer.init()
-sound_file = pygame.mixer.Sound(full_path)
+sound_file = pygame.mixer.Sound('neck_warning.mp3')
 
 if __name__ == "__main__":
     detector = faceMesh.FaceMeshDetector()
@@ -21,14 +19,13 @@ if __name__ == "__main__":
 
     while cap.isOpened():
         success, image = cap.read()
-        start = time.time()
 
         if not success:
             print("Ignoring empty camera frame.")
             # If loading a video, use 'break' instead of 'continue'.
             continue
 
-        image = cv2.flip(image, 1)
+        image = cv2.flip(cv2.resize(image,[640,360]), 1)
         image, face, keypoint_2d, keypoint_3d, nose_2d, nose_3d = detector.findFaceMesh(image)
 
         if len(face) != 0:
@@ -42,15 +39,16 @@ if __name__ == "__main__":
 
             if yaw < -30 or yaw > 30 or pitch < -30 or pitch > 30:
                 s += 1
-                t = str(s//24)
+                t = 'Time:'+str(s//24)+'s'
                 cv2.putText(image, t, (10, 60), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 255), 1)
-                if s > 2*24:
-                    text = "Warning: Bad Neck Posture Detected"
+                if s >= 5*24:
+                    text = "Warning: Bad pose"
                     cv2.putText(image, text, (10, 30), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 255), 2)
-                    #cv2.rectangle(image, (5, 5), (iw - 5, ih - 5), (0, 0, 255), 2)
+                    cv2.rectangle(image, (5, 5), (iw - 5, ih - 5), (0, 0, 255), 2)
                     # os.system("say 'Warning: Bad pose'")
-                    #playsound('warning.mp3',True)
-                    sound_file.play()
+                    # playsound('alarm.mp3', False)
+                    if s % (3*20) == 0:
+                        sound_file.play()
             else:
                 s = 0
 
